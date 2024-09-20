@@ -1,4 +1,4 @@
-package kz.practice.task_1;
+package kz.practice.jUnit.task_1;
 
 public class DiscountCalculator {
     public int sumAfterDiscount(int sum) {

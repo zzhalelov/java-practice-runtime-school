@@ -1,10 +1,9 @@
 package kz.practice.jUnit.task_1;
 
-import kz.practice.task_1.DiscountCalculator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class DiscountCalculatorTest {
+class DiscountCalculatorTest {
     DiscountCalculator discountCalculator = new DiscountCalculator();
 
     @Test
@@ -22,17 +21,53 @@ public class DiscountCalculatorTest {
 
     @Test
     public void shouldGiveNoDiscountForValue1() {
+        // Подготовка
+        int buySum = 1;
+        int expectedSum = 1;
+
+        // Исполнение
+        int resultSum = discountCalculator.sumAfterDiscount(buySum);
+
+        // Проверка
+        Assertions.assertEquals(expectedSum, resultSum);
     }
 
     @Test
     public void shouldGiveNoDiscountForValue333() {
+        // Подготовка
+        int buySum = 333;
+        int expectedSum = 333;
+
+        // Исполнение
+        int resultSum = discountCalculator.sumAfterDiscount(buySum);
+
+        // Проверка
+        Assertions.assertEquals(expectedSum, resultSum);
     }
 
     @Test
     public void shouldGive2PercentDiscountForValue1000() {
+        // Подготовка
+        int buySum = 1000;
+        int expectedSum = 980;
+
+        // Исполнение
+        int resultSum = discountCalculator.sumAfterDiscount(buySum);
+
+        // Проверка
+        Assertions.assertEquals(expectedSum, resultSum);
     }
 
     @Test
     public void shouldGive2PercentDiscountForValue2000() {
+        // Подготовка
+        int buySum = 2000;
+        int expectedSum = 1960;
+
+        // Исполнение
+        int resultSum = discountCalculator.sumAfterDiscount(buySum);
+
+        // Проверка
+        Assertions.assertEquals(expectedSum, resultSum);
     }
 }
