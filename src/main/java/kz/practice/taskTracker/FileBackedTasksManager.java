@@ -9,6 +9,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -113,18 +114,31 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     //Преобразует обзект Task в строку CSV
     private String toString(Task task) {
         StringBuilder sb = new StringBuilder();
+
+        TaskType taskType;
+        if (task instanceof Epic) {
+            taskType = TaskType.EPIC;
+        } else if (task instanceof SubTask) {
+            taskType = TaskType.SUBTASK;
+        } else {
+            taskType = TaskType.TASK;
+        }
+
         sb.append(task.getId()).append(",")
+                .append(taskType).append(",")
                 .append(task.getName()).append(",")
                 .append(task.getStatus()).append(",")
-                .append(task.getDescription()).append(",");
+                .append(task.getDescription());
+
         if (task instanceof SubTask) {
-            sb.append(((SubTask) task).getEpic().getId());
+            sb.append(",").append(((SubTask) task).getEpic().getId());
         }
         return sb.toString();
     }
 
     //преобразует фпйл CSV в объект Task
     private static Task fromString(String task) {
+        Task task1;
         String[] fields = task.split(",");
         int id = Integer.parseInt(fields[0]);
         TaskType type = TaskType.valueOf(fields[1]);
@@ -145,6 +159,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             }
             default -> throw new RuntimeException("Invalid task type");
         }
+
 
     }
 

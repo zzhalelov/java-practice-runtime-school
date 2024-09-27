@@ -2,8 +2,6 @@ package kz.practice.taskTracker;
 
 import kz.practice.taskTracker.entity.Epic;
 import kz.practice.taskTracker.entity.Task;
-import kz.practice.taskTracker.entity.Epic;
-import kz.practice.taskTracker.entity.Task;
 import kz.practice.taskTracker.entity.SubTask;
 
 import java.io.File;
