@@ -10,7 +10,7 @@ class FortuneCookieFactoryTest {
     private FortuneCookieFactory factory;
 
     @BeforeEach
-    public void setUp() {
+    public void createFactory() {
         factory = new FortuneCookieFactory(
                 new FortuneConfig(true),
                 singletonList("positive"),
