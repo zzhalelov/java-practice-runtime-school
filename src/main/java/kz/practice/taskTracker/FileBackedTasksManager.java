@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
-    private final File file;
+    private File file;
 
     public FileBackedTasksManager(File file) {
         super(Managers.getDefaultHistory());
@@ -102,10 +102,22 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         FileBackedTasksManager manager = new FileBackedTasksManager(file);
         List<String> lines = new ArrayList<>();
         boolean isHistory = false;
+
+        try {
+            lines = Files.readAllLines(file.toPath());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
         for (String line : lines) {
             if (line.isEmpty()) {
                 isHistory = true;
                 continue;
+            }
+            if (!isHistory) {
+                manager.createTask(fromString(line));
+            } else {
+                manager.historyManager.add(fromString(line));
             }
         }
         return manager;
@@ -138,7 +150,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     //преобразует фпйл CSV в объект Task
     private static Task fromString(String task) {
-        Task task1;
         String[] fields = task.split(",");
         int id = Integer.parseInt(fields[0]);
         TaskType type = TaskType.valueOf(fields[1]);
@@ -148,19 +159,17 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
         switch (type) {
             case TASK -> {
-                return new Task(name, description);
+                return new Task(id, name, description, status);
             }
             case EPIC -> {
-                return new Epic(name, description);
+                return new Epic(id, name, description, status);
             }
             case SUBTASK -> {
                 int epicId = Integer.parseInt(fields[5]);
-                return new SubTask(name, description, new Epic(name, description));
+                return new SubTask(id, name, description, status, new Epic(epicId, name, description, status));
             }
             default -> throw new RuntimeException("Invalid task type");
         }
-
-
     }
 
     // Сохранение истории просмотра

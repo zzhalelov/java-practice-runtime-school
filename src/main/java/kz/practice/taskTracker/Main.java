@@ -11,9 +11,9 @@ public class Main {
         File file = new File("tasks.csv");
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
 
-        Task task1 = new Task("Созвон", "Созвон с заказчиками в 11:00");
-        Epic epic1 = new Epic("Дела по работе", "Дела по работе");
-        SubTask subTask1 = new SubTask("Демонстрация заказчику", "Продемонстрировать заказчику функционал", epic1);
+        Task task1 = new Task(1, "Созвон", "Созвон с заказчиками в 11:00", Status.NEW);
+        Epic epic1 = new Epic(1, "Дела по работе", "Дела по работе", Status.NEW);
+        SubTask subTask1 = new SubTask(1, "Демонстрация заказчику", "Продемонстрировать заказчику функционал", Status.NEW, epic1);
 
         fileBackedTasksManager.createTask(task1);
         fileBackedTasksManager.createEpic(epic1);
