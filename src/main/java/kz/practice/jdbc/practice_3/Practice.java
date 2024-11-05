@@ -1,6 +1,7 @@
 package kz.practice.jdbc.practice_3;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.Scanner;
 
 public class Practice {
@@ -25,9 +26,15 @@ public class Practice {
                 case 3 -> findBookByTitle();
                 case 4 -> updateBook();
                 case 5 -> deleteBook();
+                case 6 -> addReader();
+                case 7 -> loanBook();
+                case 8 -> returnBook();
                 case 0 -> {
                     System.out.println();
                     return;
+                }
+                default -> {
+                    System.err.println("Некорректная команда. Попробуйте снова");
                 }
             }
         }
@@ -69,9 +76,9 @@ public class Practice {
     }
 
     public static void getAllBooks() {
-        try (Connection connection = getConnection()) {
-            Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery("SELECT * FROM books");
+        try (Connection connection = getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet result = statement.executeQuery("SELECT * FROM books")) {
             while (result.next()) {
                 System.out.println("id: " + result.getInt("id"));
                 System.out.println("title: " + result.getString("title"));
@@ -151,6 +158,80 @@ public class Practice {
         }
     }
 
+    public static void addReader() {
+        try (Connection connection = getConnection()) {
+            System.out.println("Введите имя пользователя:");
+            String name = scanner.nextLine();
+
+            System.out.println("Введите email пользователя:");
+            String email = scanner.nextLine();
+            try (PreparedStatement prepared = connection.prepareStatement("INSERT INTO readers (name, email) VALUES (?,?)")) {
+                prepared.setString(1, name);
+                prepared.setString(2, email);
+                prepared.executeUpdate();
+                System.out.println("Читатель добавлен");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void loanBook() {
+        try (Connection connection = getConnection()) {
+            System.out.println("Введите id книги:");
+            int bookId = scanner.nextInt();
+            System.out.println("Введите id читателя:");
+            int readerId = scanner.nextInt();
+            System.out.println("Введите дату выдачи книги. Год, месяц, день:");
+            int year = scanner.nextInt();
+            int month = scanner.nextInt();
+            int day = scanner.nextInt();
+            LocalDate loanDate = LocalDate.of(year, month, day);
+
+            try (PreparedStatement prepared = connection.prepareStatement("INSERT INTO loans (book_id, reader_id, loan_date) VALUES (?,?,?)")) {
+                prepared.setInt(1, bookId);
+                prepared.setInt(2, readerId);
+                prepared.setDate(3, Date.valueOf(loanDate));
+                prepared.executeUpdate();
+                System.out.println("Добавлена запись о выдаче книги");
+            }
+            try (PreparedStatement prepared = connection.prepareStatement("UPDATE books SET available = false WHERE id = ?")) {
+                prepared.setInt(1, bookId);
+                prepared.executeUpdate();
+                System.out.println("Статус доступности книги изменен на false");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void returnBook() {
+        try (Connection connection = getConnection()) {
+            System.out.println("Введите id возврашаемой книги:");
+            int bookId = scanner.nextInt();
+
+            System.out.println("Введите дату возврата книги. Год, месяц, день:");
+            int year = scanner.nextInt();
+            int month = scanner.nextInt();
+            int day = scanner.nextInt();
+            LocalDate returnDate = LocalDate.of(year, month, day);
+
+            try (PreparedStatement prepared = connection.prepareStatement("UPDATE loans SET return_date = ? WHERE book_id = ? AND return_date IS NULL")) {
+                prepared.setDate(1, Date.valueOf(returnDate));
+                prepared.setInt(2, bookId);
+                prepared.executeUpdate();
+                System.out.println("Книги возвращена. Дата возврата: " + returnDate);
+            }
+            try (PreparedStatement prepared = connection.prepareStatement("UPDATE books SET available = true WHERE id = ?")) {
+                prepared.setInt(1, bookId);
+                prepared.executeUpdate();
+                System.out.println("Статус доступности книги изменен на true");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void printMenu() {
         System.out.println();
         System.out.println("Выберите команду:");
@@ -159,6 +240,9 @@ public class Practice {
         System.out.println("3. Найти книгу по названию");
         System.out.println("4. Обновить информацию о книге");
         System.out.println("5. Удалить книгу");
+        System.out.println("6. Создать читателя");
+        System.out.println("7. Выдать книгу");
+        System.out.println("8. Вернуть книгу");
         System.out.println("0. Выход");
     }
 }
