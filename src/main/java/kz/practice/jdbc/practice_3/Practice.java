@@ -29,13 +29,13 @@ public class Practice {
                 case 6 -> addReader();
                 case 7 -> loanBook();
                 case 8 -> returnBook();
+                case 9 -> readerHistory();
+                case 10 -> getAvailableBooks();
                 case 0 -> {
                     System.out.println();
                     return;
                 }
-                default -> {
-                    System.err.println("Некорректная команда. Попробуйте снова");
-                }
+                default -> System.err.println("Некорректная команда. Попробуйте снова");
             }
         }
     }
@@ -232,6 +232,49 @@ public class Practice {
         }
     }
 
+    public static void readerHistory() {
+        try (Connection connection = getConnection()) {
+            System.out.print("Введите id читателя: ");
+            int readerId = scanner.nextInt();
+
+            try (PreparedStatement prepared = connection.prepareStatement("SELECT books.id, books.title, books.author, books.year, loans.loan_date, loans.return_date " +
+                    "FROM loans, books " +
+                    "INNER JOIN loans l on books.id = l.book_id " +
+                    "WHERE l.reader_id = ?;")) {
+                prepared.setInt(1, readerId);
+
+                try (ResultSet result = prepared.executeQuery()) {
+                    while (result.next()) {
+                        System.out.println("Книга ID: " + result.getInt("id"));
+                        System.out.println("Название: " + result.getString("title"));
+                        System.out.println("Автор: " + result.getString("author"));
+                        System.out.println("Год: " + result.getInt("year"));
+                        System.out.println("Дата выдачи: " + result.getDate("loan_date"));
+                        System.out.println("Дата возврата: " + result.getDate("return_date"));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void getAvailableBooks() {
+        try (Connection connection = getConnection()) {
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery("SELECT * FROM books WHERE available = true");
+            while (result.next()) {
+                System.out.println("Книга ID: " + result.getInt("id"));
+                System.out.println("Название: " + result.getString("title"));
+                System.out.println("Автор: " + result.getString("author"));
+                System.out.println("Год: " + result.getInt("year"));
+                System.out.println("Дата выдачи: " + result.getBoolean("available"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void printMenu() {
         System.out.println();
         System.out.println("Выберите команду:");
@@ -243,6 +286,9 @@ public class Practice {
         System.out.println("6. Создать читателя");
         System.out.println("7. Выдать книгу");
         System.out.println("8. Вернуть книгу");
+        System.out.println("9. Просмотр истории выдач читателю");
+        System.out.println("10. Просмотр доступных книг");
         System.out.println("0. Выход");
+        System.out.println();
     }
 }
