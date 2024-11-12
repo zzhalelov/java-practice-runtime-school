@@ -131,10 +131,13 @@ public class ReaderService {
             Statement countBooksStatement = connection.createStatement();
             Statement countOfAvailableBooksStatement = connection.createStatement();
             Statement countOfNonAvailableBooksStatement = connection.createStatement();
+            Statement activeReadersStatement = connection.createStatement();
 
             ResultSet countBooks = countBooksStatement.executeQuery("SELECT COUNT(*) AS count FROM books");
             ResultSet countOfAvailableBooks = countOfAvailableBooksStatement.executeQuery("SELECT COUNT(*) AS availableBooks FROM books WHERE available = true");
             ResultSet countOfNonAvailableBooks = countOfNonAvailableBooksStatement.executeQuery("SELECT COUNT(*) AS nonAvailableBooks FROM books WHERE available = false");
+            ResultSet activeReaders = activeReadersStatement.executeQuery("SELECT COUNT(reader_id) AS activeBooks FROM readers INNER JOIN loans l on readers.id = l.reader_id WHERE l.return_date IS NULL");
+
             if (countBooks.next()) {
                 System.out.println("Общее количество книг в библиотеке: " + countBooks.getInt("count"));
             }
@@ -143,6 +146,9 @@ public class ReaderService {
             }
             if (countOfAvailableBooks.next()) {
                 System.out.println("Общее количество выданных книг в библиотеке: " + countOfNonAvailableBooks.getInt("nonAvailableBooks"));
+            }
+            if (activeReaders.next()) {
+                System.out.println("Количество активных читателей: " + activeReaders.getInt("activeBooks"));
             }
 
         } catch (SQLException e) {
