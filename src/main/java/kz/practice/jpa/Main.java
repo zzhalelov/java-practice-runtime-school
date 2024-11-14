@@ -1,9 +1,6 @@
 package kz.practice.jpa;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-import jakarta.persistence.TypedQuery;
+import jakarta.persistence.*;
 import kz.practice.jpa.entity.Category;
 import kz.practice.jpa.entity.Option;
 import kz.practice.jpa.entity.Product;
@@ -22,6 +19,7 @@ public class Main {
             String command = scanner.nextLine();
             switch (command) {
                 case "1" -> create();
+                case "2" -> update();
                 case "0" -> {
                     System.out.println("Exit");
                     return;
@@ -93,6 +91,63 @@ public class Main {
 
                 // Persist value entity to database
                 manager.persist(value);
+            }
+            manager.getTransaction().commit();
+        } catch (Exception e) {
+            manager.getTransaction().rollback();
+            e.printStackTrace();
+        } finally {
+            manager.close();
+        }
+    }
+
+    private static void update() {
+        EntityManager manager = factory.createEntityManager();
+        try {
+            manager.getTransaction().begin();
+            // Input product id
+            System.out.print("Input product id: ");
+            String productIdString = scanner.nextLine();
+            int productId = Integer.parseInt(productIdString);
+            Product product = manager.find(Product.class, productId);
+
+            // Input new product name
+            System.out.println("Input new product name" + product.getName() + ": ");
+            String newProductNameString = scanner.nextLine();
+            if (!newProductNameString.isEmpty()) {
+                product.setName(newProductNameString);
+            }
+
+            // Input new product price
+            System.out.println("Input new product price" + product.getPrice() + ": ");
+            String newProductPriceString = scanner.nextLine();
+            if (!newProductPriceString.isEmpty()) {
+                int newProductPrice = Integer.parseInt(newProductPriceString);
+                product.setPrice(newProductPrice);
+            }
+            for (Option option : product.getCategory().getOptions()) {
+                TypedQuery<Value> valueTypedQuery = manager.createQuery(
+                        "SELECT v FROM Value v WHERE v.product = ?1 AND v.option = ?2", Value.class
+                );
+                valueTypedQuery.setParameter(1, product);
+                valueTypedQuery.setParameter(2, option);
+                try {
+                    Value value = valueTypedQuery.getSingleResult();
+                    System.out.printf("%s [%s]: ", option.getName(), value.getValue());
+                    String newValueString = scanner.nextLine();
+                    if (!newValueString.isEmpty()) {
+                        value.setValue(newValueString);
+                    }
+                } catch (NoResultException e) {
+                    System.out.printf("%s: ", option.getName());
+                    String valueString = scanner.nextLine();
+                    Value value = new Value();
+                    value.setProduct(product);
+                    value.setOption(option);
+                    value.setValue(valueString);
+                    manager.persist(value);
+                }
+                valueTypedQuery.getSingleResult();
             }
             manager.getTransaction().commit();
         } catch (Exception e) {
