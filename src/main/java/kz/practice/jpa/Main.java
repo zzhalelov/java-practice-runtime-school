@@ -20,6 +20,7 @@ public class Main {
             switch (command) {
                 case "1" -> create();
                 case "2" -> update();
+                case "3" -> delete();
                 case "0" -> {
                     System.out.println("Exit");
                     return;
@@ -149,6 +150,28 @@ public class Main {
                 }
                 valueTypedQuery.getSingleResult();
             }
+            manager.getTransaction().commit();
+        } catch (Exception e) {
+            manager.getTransaction().rollback();
+            e.printStackTrace();
+        } finally {
+            manager.close();
+        }
+    }
+
+    private static void delete() {
+        EntityManager manager = factory.createEntityManager();
+        try {
+            manager.getTransaction().begin();
+
+            // Input product id
+            System.out.print("Input product id: ");
+            String productIdString = scanner.nextLine();
+            int productId = Integer.parseInt(productIdString);
+            Product product = manager.find(Product.class, productId);
+
+            // Remove entity from database
+            manager.remove(product);
             manager.getTransaction().commit();
         } catch (Exception e) {
             manager.getTransaction().rollback();
