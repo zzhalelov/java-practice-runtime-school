@@ -21,6 +21,7 @@ public class Main {
                 case "1" -> create();
                 case "2" -> update();
                 case "3" -> delete();
+                case "4" -> createCategory();
                 case "0" -> {
                     System.out.println("Exit");
                     return;
@@ -35,6 +36,7 @@ public class Main {
                 - Create [1]
                 - Update [2]
                 - Delete [3]
+                - Create Category [4]
                 Select an action: \
                 """);
         System.out.println("0. Exit");
@@ -99,6 +101,35 @@ public class Main {
             e.printStackTrace();
         } finally {
             manager.close();
+        }
+    }
+
+    private static void createCategory() {
+        EntityManager manager = factory.createEntityManager();
+        try {
+            manager.getTransaction().begin();
+
+            //Input category name
+            System.out.print("Input category's name: ");
+            String categoryName = scanner.nextLine();
+
+            //Create category entity
+            Category category = new Category();
+            category.setName(categoryName);
+
+            //Persist category entity to database
+            manager.persist(category);
+            System.out.print("Insert option's name for category [%s]: ");
+            String optionString = scanner.nextLine();
+
+            //Create option entity
+            Option option = new Option();
+            option.setName(optionString);
+
+            manager.getTransaction().commit();
+        } catch (Exception e) {
+            manager.getTransaction().rollback();
+            e.printStackTrace();
         }
     }
 

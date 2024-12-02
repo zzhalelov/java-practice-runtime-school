@@ -9,7 +9,6 @@ import lombok.ToString;
 @Table(name = "values")
 @Getter
 @Setter
-@ToString
 public class Value {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,4 +22,14 @@ public class Value {
     @ManyToOne
     @JoinColumn(name = "option_id")
     private Option option;
+
+    @Override
+    public String toString() {
+        return "Value{" +
+                "id=" + id +
+                ", value='" + value + '\'' +
+                ", product=" + product +
+                ", option=" + option +
+                '}';
+    }
 }

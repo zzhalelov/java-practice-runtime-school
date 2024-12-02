@@ -11,7 +11,6 @@ import java.util.List;
 @Table(name = "options")
 @Getter
 @Setter
-@ToString
 public class Option {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,4 +23,14 @@ public class Option {
 
     @OneToMany(mappedBy = "option")
     private List<Value> values;
+
+    @Override
+    public String toString() {
+        return "Option{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", category=" + category +
+                ", values=" + values +
+                '}';
+    }
 }

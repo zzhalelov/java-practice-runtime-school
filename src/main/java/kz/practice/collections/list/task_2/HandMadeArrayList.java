@@ -1,4 +1,4 @@
-package kz.practice.list.task_2;
+package kz.practice.collections.list.task_2;
 
 public class HandMadeArrayList<T> {
 

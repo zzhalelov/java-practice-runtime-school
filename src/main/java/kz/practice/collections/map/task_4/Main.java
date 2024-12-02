@@ -1,4 +1,4 @@
-package kz.practice.map.task_4;
+package kz.practice.collections.map.task_4;
 
 import java.util.*;
 

@@ -1,4 +1,4 @@
-package kz.practice.list.task_3;
+package kz.practice.collections.list.task_3;
 
 import java.util.NoSuchElementException;
 

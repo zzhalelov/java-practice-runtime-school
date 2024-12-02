@@ -11,12 +11,12 @@ import java.util.List;
 @Table(name = "products")
 @Setter
 @Getter
-@ToString
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
+
     private double price;
 
     @ManyToOne
@@ -25,4 +25,15 @@ public class Product {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
     private List<Value> values;
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", category=" + category +
+                ", values=" + values +
+                '}';
+    }
 }

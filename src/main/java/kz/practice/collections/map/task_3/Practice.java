@@ -1,4 +1,4 @@
-package kz.practice.map.task_3;
+package kz.practice.collections.map.task_3;
 
 import java.util.ArrayList;
 import java.util.HashMap;
