@@ -23,7 +23,8 @@ public class BookService {
             System.out.println("Доступна ли книга?");
             boolean available = Boolean.parseBoolean(scanner.nextLine());
 
-            try (PreparedStatement prepared = connection.prepareStatement("INSERT INTO books (title, author, year, available) VALUES (?,?,?,?)")) {
+            try (PreparedStatement prepared = connection.
+                    prepareStatement("INSERT INTO books (title, author, year, available) VALUES (?,?,?,?)")) {
                 prepared.setString(1, title);
                 prepared.setString(2, author);
                 prepared.setInt(3, year);
@@ -91,7 +92,8 @@ public class BookService {
         boolean updatedAvailability = scanner.nextBoolean();
 
         try (Connection connection = getConnection()) {
-            PreparedStatement prepared = connection.prepareStatement("UPDATE books SET title = ?, author = ?, year = ?, available = ? WHERE id = ?");
+            PreparedStatement prepared = connection.
+                    prepareStatement("UPDATE books SET title = ?, author = ?, year = ?, available = ? WHERE id = ?");
             prepared.setString(1, updatedTitle);
             prepared.setString(2, updatedAuthor);
             prepared.setInt(3, updatedYear);

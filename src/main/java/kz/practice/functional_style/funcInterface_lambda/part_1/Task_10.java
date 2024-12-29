@@ -1,4 +1,4 @@
-package kz.practice.functional_style.funcInterface;
+package kz.practice.functional_style.funcInterface_lambda.part_1;
 
 import java.util.ArrayList;
 import java.util.Comparator;
