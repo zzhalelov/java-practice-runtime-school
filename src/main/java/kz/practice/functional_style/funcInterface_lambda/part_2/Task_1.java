@@ -7,7 +7,7 @@ import java.util.function.Predicate;
 // Напишите метод, который принимает список чисел и объект интерфейса Predicate<Integer>.
 // Метод должен возвращать новый список, содержащий только те числа,
 // которые удовлетворяют условию, заданному в Predicate.
-public class task_1 {
+public class Task_1 {
     public static void main(String[] args) {
         List<Integer> numbers = List.of(1, 2, 3, 4, 5);
         Predicate<Integer> isEven = s -> s % 2 == 0;

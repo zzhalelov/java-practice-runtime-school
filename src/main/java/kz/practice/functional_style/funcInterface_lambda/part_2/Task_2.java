@@ -6,7 +6,7 @@ import java.util.function.Function;
 
 // Напишите метод, который принимает список чисел и объект интерфейса Function<Integer, Integer>.
 // Метод должен возвращать новый список, где к каждому числу применена переданная функция.
-public class task_2 {
+public class Task_2 {
     public static void main(String[] args) {
         List<Integer> numbers = List.of(1, 2, 3, 4, 5);
         Function<Integer, Integer> square = s -> (int) Math.pow(s, 2);
