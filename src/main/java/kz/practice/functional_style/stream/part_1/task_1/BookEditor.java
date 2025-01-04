@@ -1,4 +1,4 @@
-package kz.practice.functional_style.stream.task_1;
+package kz.practice.functional_style.stream.part_1.task_1;
 
 import java.util.ArrayList;
 import java.util.Arrays;

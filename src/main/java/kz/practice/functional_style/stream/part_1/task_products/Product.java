@@ -1,4 +1,4 @@
-package kz.practice.functional_style.stream.task_products;
+package kz.practice.functional_style.stream.part_1.task_products;
 
 record Product(String name, int price, ProductType type) {
 

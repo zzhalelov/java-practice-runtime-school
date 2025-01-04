@@ -1,4 +1,4 @@
-package kz.practice.functional_style.stream.task_2;
+package kz.practice.functional_style.stream.part_1.task_2;
 
 public class Student {
     String surname;

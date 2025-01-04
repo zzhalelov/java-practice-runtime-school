@@ -1,4 +1,4 @@
-package kz.practice.functional_style.stream.task_2;
+package kz.practice.functional_style.stream.part_1.task_2;
 
 import java.util.*;
 import java.util.stream.Collectors;

@@ -1,4 +1,4 @@
-package kz.practice.functional_style.stream.task_3;
+package kz.practice.functional_style.stream.part_1.task_3;
 
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.BiConsumer;
